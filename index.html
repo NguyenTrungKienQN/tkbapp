@@ -1,0 +1,1226 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thời Khóa Biểu</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f7fa;
+            --text-primary: #1a202c;
+            --text-secondary: #718096;
+            --border-color: #e2e8f0;
+            --shadow: 0 2px 8px rgba(0,0,0,0.1);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
+            --accent: #4299e1;
+            --danger: #f56565;
+            --success: #48bb78;
+        }
+
+        [data-theme="dark"] {
+            --bg-primary: #1a202c;
+            --bg-secondary: #2d3748;
+            --text-primary: #f7fafc;
+            --text-secondary: #a0aec0;
+            --border-color: #4a5568;
+            --shadow: 0 2px 8px rgba(0,0,0,0.3);
+            --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 16px;
+        }
+
+        /* Header */
+        header {
+            background: var(--bg-primary);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px;
+        }
+
+        .logo {
+            font-size: 20px;
+            font-weight: 700;
+            color: var(--accent);
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        /* Navigation */
+        nav {
+            background: var(--bg-primary);
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 0;
+            min-width: min-content;
+        }
+
+        .nav-tab {
+            padding: 12px 20px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 15px;
+            font-weight: 500;
+            white-space: nowrap;
+            border-bottom: 2px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .nav-tab.active {
+            color: var(--accent);
+            border-bottom-color: var(--accent);
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s;
+            background: var(--accent);
+            color: white;
+        }
+
+        .btn:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .btn-icon {
+            padding: 8px;
+            border-radius: 50%;
+            background: transparent;
+            border: 1px solid var(--border-color);
+            color: var(--text-primary);
+            font-size: 18px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-small {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+
+        /* Week Navigation */
+        .week-nav {
+            background: var(--bg-primary);
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 12px;
+            border-radius: 12px;
+            margin: 16px 0;
+            box-shadow: var(--shadow);
+        }
+
+        .week-info {
+            flex: 1;
+            text-align: center;
+        }
+
+        .week-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .week-date {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        /* Schedule Grid */
+        .schedule-grid {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+            box-shadow: var(--shadow);
+            margin-bottom: 80px;
+        }
+
+        .grid-container {
+            display: grid;
+            grid-template-columns: 60px repeat(6, 1fr);
+            min-width: 600px;
+        }
+
+        .grid-header {
+            position: sticky;
+            top: 0;
+            background: var(--bg-secondary);
+            z-index: 10;
+            font-weight: 600;
+            font-size: 14px;
+            padding: 12px 8px;
+            text-align: center;
+            border-bottom: 2px solid var(--border-color);
+        }
+
+        .grid-header.today {
+            color: var(--accent);
+        }
+
+        .grid-time {
+            background: var(--bg-secondary);
+            padding: 12px 8px;
+            text-align: center;
+            font-size: 13px;
+            font-weight: 600;
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .grid-cell {
+            padding: 4px;
+            border-right: 1px solid var(--border-color);
+            border-bottom: 1px solid var(--border-color);
+            min-height: 80px;
+            position: relative;
+        }
+
+        .subject-card {
+            background: linear-gradient(135deg, var(--subject-color) 0%, var(--subject-color-light) 100%);
+            border-radius: 8px;
+            padding: 8px;
+            height: 100%;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .subject-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .subject-name {
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 4px;
+            color: #fff;
+        }
+
+        .subject-info {
+            font-size: 11px;
+            opacity: 0.9;
+            color: #fff;
+        }
+
+        /* Today View */
+        .today-container {
+            padding: 16px 0;
+        }
+
+        .today-card {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            box-shadow: var(--shadow);
+        }
+
+        .today-card.current {
+            border-left: 4px solid var(--accent);
+        }
+
+        .today-time {
+            font-size: 13px;
+            color: var(--text-secondary);
+            margin-bottom: 8px;
+        }
+
+        .today-subject {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        .today-details {
+            display: flex;
+            gap: 12px;
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        .countdown {
+            background: var(--accent);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 600;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 16px;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 24px;
+            max-width: 500px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .form-input, .form-select {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            font-size: 14px;
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+        }
+
+        .form-input:focus, .form-select:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .color-picker {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 8px;
+            margin-top: 8px;
+        }
+
+        .color-option {
+            width: 100%;
+            aspect-ratio: 1;
+            border-radius: 8px;
+            border: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .color-option.selected {
+            border-color: var(--text-primary);
+            transform: scale(1.1);
+        }
+
+        /* Bottom Nav */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--bg-primary);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-around;
+            padding: 8px 0;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+        }
+
+        .bottom-nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 4px;
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .bottom-nav-item.active {
+            color: var(--accent);
+        }
+
+        .bottom-nav-icon {
+            font-size: 24px;
+        }
+
+        /* Hide/Show Views */
+        .view {
+            display: none;
+        }
+
+        .view.active {
+            display: block;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 48px 16px;
+            color: var(--text-secondary);
+        }
+
+        .empty-icon {
+            font-size: 64px;
+            margin-bottom: 16px;
+            opacity: 0.5;
+        }
+
+        /* Subjects List */
+        .subjects-list {
+            padding: 16px 0;
+        }
+
+        .subject-item {
+            background: var(--bg-primary);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            box-shadow: var(--shadow);
+        }
+
+        .subject-color-badge {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            flex-shrink: 0;
+        }
+
+        .subject-item-info {
+            flex: 1;
+        }
+
+        .subject-item-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .subject-item-details {
+            font-size: 13px;
+            color: var(--text-secondary);
+        }
+
+        @media (max-width: 768px) {
+            .grid-container {
+                grid-template-columns: 50px repeat(6, minmax(80px, 1fr));
+            }
+
+            .logo {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <div class="logo">📚 TKB</div>
+            <div class="header-actions">
+                <button class="btn-icon" onclick="toggleTheme()" title="Chuyển theme">🌙</button>
+                <button class="btn-icon" onclick="showSettings()" title="Cài đặt">⚙️</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+        <!-- Week View -->
+        <div id="weekView" class="view active">
+            <div class="week-nav">
+                <button class="btn-icon" onclick="previousWeek()">←</button>
+                <div class="week-info">
+                    <div class="week-title" id="weekTitle">Tuần hiện tại</div>
+                    <div class="week-date" id="weekDate"></div>
+                </div>
+                <button class="btn-icon" onclick="nextWeek()">→</button>
+                <button class="btn btn-small" onclick="goToToday()">Hôm nay</button>
+            </div>
+
+            <div style="display: flex; gap: 8px; margin-bottom: 16px; align-items: center;">
+                <button class="btn btn-small" onclick="showAddScheduleQuick()">➕ Thêm tiết</button>
+                <div style="display: flex; gap: 8px; flex: 1;">
+                    <button class="btn" id="btnMorning" onclick="showSession('morning')" style="flex: 1;">☀️ Sáng</button>
+                    <button class="btn" id="btnAfternoon" onclick="showSession('afternoon')" style="flex: 1; background: var(--text-secondary);">🌙 Chiều</button>
+                </div>
+            </div>
+
+            <div class="schedule-grid">
+                <div class="grid-container" id="scheduleGrid"></div>
+            </div>
+        </div>
+
+        <!-- Today View -->
+        <div id="todayView" class="view">
+            <h2 style="padding: 16px 0; font-size: 24px;">Hôm nay</h2>
+            <div id="todayContainer" class="today-container"></div>
+        </div>
+
+        <!-- Subjects View -->
+        <div id="subjectsView" class="view">
+            <div style="padding: 16px 0; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="font-size: 24px;">Môn học</h2>
+                <button class="btn" onclick="showAddSubject()">+ Thêm môn</button>
+            </div>
+            <div id="subjectsList" class="subjects-list"></div>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <button class="bottom-nav-item active" onclick="switchView('week')">
+            <span class="bottom-nav-icon">📅</span>
+            <span>Tuần</span>
+        </button>
+        <button class="bottom-nav-item" onclick="switchView('today')">
+            <span class="bottom-nav-icon">📍</span>
+            <span>Hôm nay</span>
+        </button>
+        <button class="bottom-nav-item" onclick="switchView('subjects')">
+            <span class="bottom-nav-icon">📚</span>
+            <span>Môn học</span>
+        </button>
+    </div>
+
+    <!-- Add/Edit Subject Modal -->
+    <div id="subjectModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="subjectModalTitle">Thêm môn học</h3>
+                <button class="btn-icon" onclick="closeSubjectModal()">✕</button>
+            </div>
+            <form id="subjectForm" onsubmit="saveSubject(event)">
+                <div class="form-group">
+                    <label class="form-label">Tên môn học</label>
+                    <input type="text" class="form-input" id="subjectName" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Giáo viên</label>
+                    <input type="text" class="form-input" id="subjectTeacher">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Màu sắc</label>
+                    <div class="color-picker" id="colorPicker"></div>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="submit" class="btn" style="flex: 1;">Lưu</button>
+                    <button type="button" class="btn" style="background: var(--text-secondary); flex: 1;" onclick="closeSubjectModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Schedule Modal -->
+    <div id="scheduleModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Thêm tiết học</h3>
+                <button class="btn-icon" onclick="closeScheduleModal()">✕</button>
+            </div>
+            <form id="scheduleForm" onsubmit="saveSchedule(event)">
+                <div class="form-group">
+                    <label class="form-label">Thứ</label>
+                    <select class="form-select" id="scheduleDay" required></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Buổi</label>
+                    <select class="form-select" id="scheduleSession" required></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Tiết</label>
+                    <select class="form-select" id="schedulePeriod" required></select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Môn học</label>
+                    <select class="form-select" id="scheduleSubject" required></select>
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="submit" class="btn" style="flex: 1;">Lưu</button>
+                    <button type="button" class="btn" style="background: var(--text-secondary); flex: 1;" onclick="closeScheduleModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        const COLORS = [
+            { name: 'Blue', color: '#4299e1', light: '#63b3ed' },
+            { name: 'Green', color: '#48bb78', light: '#68d391' },
+            { name: 'Purple', color: '#9f7aea', light: '#b794f4' },
+            { name: 'Pink', color: '#ed64a6', light: '#f687b3' },
+            { name: 'Orange', color: '#ed8936', light: '#f6ad55' },
+            { name: 'Red', color: '#f56565', light: '#fc8181' },
+            { name: 'Teal', color: '#38b2ac', light: '#4fd1c5' },
+            { name: 'Indigo', color: '#667eea', light: '#7f9cf5' },
+            { name: 'Yellow', color: '#ecc94b', light: '#f6e05e' },
+            { name: 'Cyan', color: '#0bc5ea', light: '#76e4f7' }
+        ];
+
+        const DAYS = ['T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+        const PERIODS_MORNING = 5;
+        const PERIODS_AFTERNOON = 5;
+        const TOTAL_PERIODS = PERIODS_MORNING + PERIODS_AFTERNOON;
+        
+        // LocalStorage keys with prefix to avoid conflicts
+        const STORAGE_PREFIX = 'tkb_app_';
+        const STORAGE_KEYS = {
+            SUBJECTS: STORAGE_PREFIX + 'subjects',
+            SCHEDULE: STORAGE_PREFIX + 'schedule',
+            THEME: STORAGE_PREFIX + 'theme'
+        };
+
+        let currentWeekOffset = 0;
+        let subjects = JSON.parse(localStorage.getItem(STORAGE_KEYS.SUBJECTS)) || [];
+        let schedule = JSON.parse(localStorage.getItem(STORAGE_KEYS.SCHEDULE)) || {};
+        let currentTheme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
+        let editingSubjectId = null;
+        let currentSession = 'morning'; // 'morning' or 'afternoon'
+
+        // Initialize
+        function init() {
+            applyTheme();
+            renderColorPicker();
+            renderScheduleGrid();
+            renderSubjectsList();
+            updateWeekInfo();
+            populateFormSelects();
+            
+            if (subjects.length === 0) {
+                addDefaultSubjects();
+            }
+        }
+
+        function addDefaultSubjects() {
+            const defaults = [
+                { name: 'Toán', teacher: 'Cô Hương', color: COLORS[0] },
+                { name: 'Văn', teacher: 'Thầy Nam', color: COLORS[1] },
+                { name: 'Anh', teacher: 'Cô Linh', color: COLORS[2] },
+                { name: 'Lý', teacher: 'Thầy Dũng', color: COLORS[3] },
+                { name: 'Hóa', teacher: 'Cô Mai', color: COLORS[4] },
+                { name: 'Sinh', teacher: 'Cô Lan', color: COLORS[5] }
+            ];
+            
+            defaults.forEach(s => {
+                subjects.push({
+                    id: Date.now() + Math.random(),
+                    ...s
+                });
+            });
+            
+            saveSubjects();
+            renderSubjectsList();
+        }
+
+        function toggleTheme() {
+            currentTheme = currentTheme === 'light' ? 'dark' : 'light';
+            localStorage.setItem(STORAGE_KEYS.THEME, currentTheme);
+            applyTheme();
+        }
+
+        function applyTheme() {
+            document.documentElement.setAttribute('data-theme', currentTheme);
+        }
+
+        function renderColorPicker() {
+            const picker = document.getElementById('colorPicker');
+            picker.innerHTML = COLORS.map((c, i) => 
+                `<div class="color-option" style="background: ${c.color}" onclick="selectColor(${i})"></div>`
+            ).join('');
+        }
+
+        let selectedColorIndex = 0;
+        function selectColor(index) {
+            selectedColorIndex = index;
+            document.querySelectorAll('.color-option').forEach((el, i) => {
+                el.classList.toggle('selected', i === index);
+            });
+        }
+
+        function renderScheduleGrid() {
+            const grid = document.getElementById('scheduleGrid');
+            const today = new Date();
+            const currentDay = today.getDay();
+            
+            let html = '<div class="grid-header"></div>';
+            DAYS.forEach((day, i) => {
+                const isToday = (i + 1) === currentDay;
+                html += `<div class="grid-header ${isToday ? 'today' : ''}">${day}</div>`;
+            });
+
+            const periods = currentSession === 'morning' ? PERIODS_MORNING : PERIODS_AFTERNOON;
+            const sessionLabel = currentSession === 'morning' ? 'Sáng' : 'Chiều';
+
+            for (let period = 1; period <= periods; period++) {
+                html += `<div class="grid-time">${sessionLabel} ${period}</div>`;
+                for (let day = 0; day < 6; day++) {
+                    const key = `${day}-${currentSession}-${period}`;
+                    const scheduleItem = schedule[key];
+                    
+                    if (scheduleItem) {
+                        const subject = subjects.find(s => s.id == scheduleItem.subjectId);
+                        if (subject) {
+                            html += `
+                                <div class="grid-cell">
+                                    <div class="subject-card" style="--subject-color: ${subject.color.color}; --subject-color-light: ${subject.color.light}" onclick="editScheduleItem('${key}')">
+                                        <div class="subject-name">${subject.name}</div>
+                                        <div class="subject-info">${subject.teacher || ''}</div>
+                                    </div>
+                                </div>
+                            `;
+                        } else {
+                            html += `<div class="grid-cell" onclick="addScheduleItem(${day}, '${currentSession}', ${period})"></div>`;
+                        }
+                    } else {
+                        html += `<div class="grid-cell" onclick="addScheduleItem(${day}, '${currentSession}', ${period})"></div>`;
+                    }
+                }
+            }
+            
+            grid.innerHTML = html;
+        }
+
+        function renderTodayView() {
+            const container = document.getElementById('todayContainer');
+            const today = new Date();
+            const dayIndex = today.getDay() - 1; // 0=T2, 1=T3, ..., 5=T7
+            
+            // If weekend, show message
+            if (dayIndex < 0 || dayIndex > 5) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎉</div>
+                        <p>Hôm nay là cuối tuần!</p>
+                        <p style="font-size: 14px; color: var(--text-secondary); margin-top: 8px;">Nghỉ ngơi thôi nào!</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            let todaySchedule = [];
+            
+            // Morning periods
+            for (let period = 1; period <= PERIODS_MORNING; period++) {
+                const key = `${dayIndex}-morning-${period}`;
+                const item = schedule[key];
+                if (item) {
+                    const subject = subjects.find(s => s.id == item.subjectId);
+                    if (subject) {
+                        todaySchedule.push({ session: 'Sáng', period, subject });
+                    }
+                }
+            }
+            
+            // Afternoon periods
+            for (let period = 1; period <= PERIODS_AFTERNOON; period++) {
+                const key = `${dayIndex}-afternoon-${period}`;
+                const item = schedule[key];
+                if (item) {
+                    const subject = subjects.find(s => s.id == item.subjectId);
+                    if (subject) {
+                        todaySchedule.push({ session: 'Chiều', period, subject });
+                    }
+                }
+            }
+
+            if (todaySchedule.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📅</div>
+                        <p>Không có tiết học nào hôm nay</p>
+                    </div>
+                `;
+                return;
+            }
+
+            const currentHour = today.getHours();
+            const currentMinute = today.getMinutes();
+            const currentTime = currentHour * 60 + currentMinute;
+
+            let html = '';
+            todaySchedule.forEach(({ session, period, subject }) => {
+                // Calculate time based on session
+                let startTime;
+                if (session === 'Sáng') {
+                    startTime = 7 * 60 + (period - 1) * 45;
+                } else {
+                    startTime = 13 * 60 + (period - 1) * 45;
+                }
+                
+                const isCurrent = currentTime >= startTime && currentTime < startTime + 45;
+                const isUpcoming = currentTime < startTime;
+                
+                let timeStr = `${Math.floor(startTime / 60)}:${(startTime % 60).toString().padStart(2, '0')}`;
+                
+                html += `
+                    <div class="today-card ${isCurrent ? 'current' : ''}">
+                        <div class="today-time">${session} - Tiết ${period} • ${timeStr}</div>
+                        <div class="today-subject">${subject.name}</div>
+                        <div class="today-details">
+                            ${subject.teacher ? `<span>👤 ${subject.teacher}</span>` : ''}
+                        </div>
+                        ${isCurrent ? '<span class="countdown">Đang học</span>' : ''}
+                        ${isUpcoming && currentTime > startTime - 15 ? '<span class="countdown">Sắp tới</span>' : ''}
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function renderSubjectsList() {
+            const list = document.getElementById('subjectsList');
+            
+            if (subjects.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📚</div>
+                        <p>Chưa có môn học nào</p>
+                        <button class="btn" onclick="showAddSubject()" style="margin-top: 16px;">Thêm môn đầu tiên</button>
+                    </div>
+                `;
+                return;
+            }
+
+            list.innerHTML = subjects.map(s => `
+                <div class="subject-item">
+                    <div class="subject-color-badge" style="background: ${s.color.color}"></div>
+                    <div class="subject-item-info">
+                        <div class="subject-item-name">${s.name}</div>
+                        <div class="subject-item-details">
+                            ${s.teacher ? `👤 ${s.teacher}` : 'Chưa có giáo viên'}
+                        </div>
+                    </div>
+                    <button class="btn-icon" onclick="editSubject('${s.id}')">✏️</button>
+                    <button class="btn-icon" onclick="deleteSubject('${s.id}')">🗑️</button>
+                </div>
+            `).join('');
+        }
+
+        function showAddSubject() {
+            editingSubjectId = null;
+            document.getElementById('subjectModalTitle').textContent = 'Thêm môn học';
+            document.getElementById('subjectForm').reset();
+            selectColor(0);
+            document.getElementById('subjectModal').classList.add('active');
+        }
+
+        function editSubject(id) {
+            const subject = subjects.find(s => s.id == id);
+            if (!subject) return;
+            
+            editingSubjectId = id;
+            document.getElementById('subjectModalTitle').textContent = 'Sửa môn học';
+            document.getElementById('subjectName').value = subject.name;
+            document.getElementById('subjectTeacher').value = subject.teacher || '';
+            
+            const colorIndex = COLORS.findIndex(c => c.color === subject.color.color);
+            selectColor(colorIndex >= 0 ? colorIndex : 0);
+            
+            document.getElementById('subjectModal').classList.add('active');
+        }
+
+        function deleteSubject(id) {
+            if (!confirm('Xóa môn học này? Tất cả tiết học liên quan cũng sẽ bị xóa.')) return;
+            
+            subjects = subjects.filter(s => s.id != id);
+            
+            // Remove schedule items with this subject
+            Object.keys(schedule).forEach(key => {
+                if (schedule[key].subjectId == id) {
+                    delete schedule[key];
+                }
+            });
+            
+            saveSubjects();
+            saveSchedule();
+            renderSubjectsList();
+            renderScheduleGrid();
+        }
+
+        function saveSubject(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('subjectName').value.trim();
+            const teacher = document.getElementById('subjectTeacher').value.trim();
+            const color = COLORS[selectedColorIndex];
+            
+            if (!name) {
+                alert('Vui lòng nhập tên môn học!');
+                return;
+            }
+            
+            if (editingSubjectId) {
+                const subject = subjects.find(s => s.id == editingSubjectId);
+                if (subject) {
+                    subject.name = name;
+                    subject.teacher = teacher;
+                    subject.color = color;
+                }
+            } else {
+                subjects.push({
+                    id: 'subj_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    name,
+                    teacher,
+                    color
+                });
+            }
+            
+            saveSubjects();
+            renderSubjectsList();
+            renderScheduleGrid();
+            populateFormSelects();
+            closeSubjectModal();
+        }
+
+        function closeSubjectModal() {
+            document.getElementById('subjectModal').classList.remove('active');
+        }
+
+        function addScheduleItem(day, session, period) {
+            if (subjects.length === 0) {
+                alert('Vui lòng thêm môn học trước!');
+                return;
+            }
+            
+            populateFormSelects();
+            document.getElementById('scheduleDay').value = day;
+            document.getElementById('scheduleSession').value = session;
+            document.getElementById('schedulePeriod').value = period;
+            document.getElementById('scheduleSubject').value = '';
+            document.getElementById('scheduleModal').classList.add('active');
+        }
+
+        function editScheduleItem(key) {
+            const parts = key.split('-');
+            const day = parts[0];
+            const session = parts[1];
+            const period = parts[2];
+            const item = schedule[key];
+            
+            if (!item) return;
+            
+            populateFormSelects();
+            document.getElementById('scheduleDay').value = day;
+            document.getElementById('scheduleSession').value = session;
+            document.getElementById('schedulePeriod').value = period;
+            document.getElementById('scheduleSubject').value = item.subjectId;
+            document.getElementById('scheduleModal').classList.add('active');
+        }
+
+        function saveSchedule(e) {
+            e.preventDefault();
+            
+            const day = document.getElementById('scheduleDay').value;
+            const session = document.getElementById('scheduleSession').value;
+            const period = document.getElementById('schedulePeriod').value;
+            const subjectId = document.getElementById('scheduleSubject').value;
+            
+            console.log('Saving schedule:', { day, session, period, subjectId });
+            
+            if (!subjectId) {
+                alert('Vui lòng chọn môn học!');
+                return;
+            }
+            
+            const key = `${day}-${session}-${period}`;
+            
+            if (subjectId === 'remove') {
+                delete schedule[key];
+                console.log('Removed schedule at', key);
+            } else {
+                schedule[key] = { subjectId: subjectId };
+                console.log('Added schedule at', key, ':', schedule[key]);
+            }
+            
+            console.log('Full schedule object:', schedule);
+            
+            saveScheduleData();
+            
+            // Verify it was saved
+            const saved = localStorage.getItem(STORAGE_KEYS.SCHEDULE);
+            console.log('Saved to localStorage:', saved);
+            
+            renderScheduleGrid();
+            renderTodayView();
+            closeScheduleModal();
+        }
+
+        function closeScheduleModal() {
+            document.getElementById('scheduleModal').classList.remove('active');
+        }
+
+        function populateFormSelects() {
+            // Day select
+            const daySelect = document.getElementById('scheduleDay');
+            daySelect.innerHTML = DAYS.map((day, i) => 
+                `<option value="${i}">${day}</option>`
+            ).join('');
+            
+            // Session select
+            const sessionSelect = document.getElementById('scheduleSession');
+            sessionSelect.innerHTML = `
+                <option value="morning">Buổi sáng</option>
+                <option value="afternoon">Buổi chiều</option>
+            `;
+            
+            // Period select
+            const periodSelect = document.getElementById('schedulePeriod');
+            periodSelect.innerHTML = Array.from({length: 5}, (_, i) => 
+                `<option value="${i + 1}">Tiết ${i + 1}</option>`
+            ).join('');
+            
+            // Subject select
+            const subjectSelect = document.getElementById('scheduleSubject');
+            subjectSelect.innerHTML = `
+                <option value="">-- Chọn môn --</option>
+                ${subjects.map(s => `<option value="${s.id}">${s.name}</option>`).join('')}
+                <option value="remove">🗑️ Xóa tiết học</option>
+            `;
+        }
+
+        function showSession(session) {
+            currentSession = session;
+            
+            // Update button styles
+            const btnMorning = document.getElementById('btnMorning');
+            const btnAfternoon = document.getElementById('btnAfternoon');
+            
+            if (session === 'morning') {
+                btnMorning.style.background = 'var(--accent)';
+                btnAfternoon.style.background = 'var(--text-secondary)';
+            } else {
+                btnMorning.style.background = 'var(--text-secondary)';
+                btnAfternoon.style.background = 'var(--accent)';
+            }
+            
+            renderScheduleGrid();
+        }
+
+        function showAddScheduleQuick() {
+            if (subjects.length === 0) {
+                alert('Vui lòng thêm môn học trước!');
+                switchView('subjects');
+                return;
+            }
+            
+            populateFormSelects();
+            document.getElementById('scheduleSession').value = currentSession;
+            document.getElementById('scheduleModal').classList.add('active');
+        }
+
+        function switchView(view) {
+            document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+            document.querySelectorAll('.bottom-nav-item').forEach(item => item.classList.remove('active'));
+            
+            if (view === 'week') {
+                document.getElementById('weekView').classList.add('active');
+                document.querySelectorAll('.bottom-nav-item')[0].classList.add('active');
+            } else if (view === 'today') {
+                document.getElementById('todayView').classList.add('active');
+                document.querySelectorAll('.bottom-nav-item')[1].classList.add('active');
+                renderTodayView();
+            } else if (view === 'subjects') {
+                document.getElementById('subjectsView').classList.add('active');
+                document.querySelectorAll('.bottom-nav-item')[2].classList.add('active');
+            }
+        }
+
+        function previousWeek() {
+            currentWeekOffset--;
+            updateWeekInfo();
+            renderScheduleGrid();
+        }
+
+        function nextWeek() {
+            currentWeekOffset++;
+            updateWeekInfo();
+            renderScheduleGrid();
+        }
+
+        function goToToday() {
+            currentWeekOffset = 0;
+            updateWeekInfo();
+            renderScheduleGrid();
+        }
+
+        function updateWeekInfo() {
+            const today = new Date();
+            const weekStart = new Date(today);
+            weekStart.setDate(today.getDate() - today.getDay() + 1 + (currentWeekOffset * 7));
+            const weekEnd = new Date(weekStart);
+            weekEnd.setDate(weekStart.getDate() + 6);
+            
+            const title = currentWeekOffset === 0 ? 'Tuần này' : 
+                         currentWeekOffset > 0 ? `Tuần sau (+${currentWeekOffset})` : 
+                         `Tuần trước (${currentWeekOffset})`;
+            
+            const dateStr = `${weekStart.getDate()}/${weekStart.getMonth() + 1} - ${weekEnd.getDate()}/${weekEnd.getMonth() + 1}`;
+            
+            document.getElementById('weekTitle').textContent = title;
+            document.getElementById('weekDate').textContent = dateStr;
+        }
+
+        function showSettings() {
+            const options = [
+                '1. 💾 Sao lưu dữ liệu',
+                '2. 📥 Khôi phục dữ liệu',
+                '3. 🗑️ Xóa tất cả dữ liệu',
+                '4. ❌ Hủy'
+            ];
+            
+            const choice = prompt(options.join('\n') + '\n\nNhập số (1-4):');
+            
+            if (choice === '1') {
+                // Export data
+                const data = {
+                    subjects: subjects,
+                    schedule: schedule,
+                    exportDate: new Date().toISOString()
+                };
+                const json = JSON.stringify(data, null, 2);
+                const blob = new Blob([json], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `tkb-backup-${new Date().toISOString().split('T')[0]}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                alert('✅ Đã tải file sao lưu!');
+            } else if (choice === '2') {
+                // Import data
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                input.onchange = (e) => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                        try {
+                            const data = JSON.parse(event.target.result);
+                            if (data.subjects && data.schedule) {
+                                subjects = data.subjects;
+                                schedule = data.schedule;
+                                saveSubjects();
+                                saveScheduleData();
+                                renderSubjectsList();
+                                renderScheduleGrid();
+                                renderTodayView();
+                                alert('✅ Khôi phục dữ liệu thành công!');
+                            } else {
+                                alert('❌ File không hợp lệ!');
+                            }
+                        } catch (err) {
+                            alert('❌ Lỗi: ' + err.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                input.click();
+            } else if (choice === '3') {
+                if (confirm('⚠️ Xóa tất cả môn học và lịch học?\n\nHành động này KHÔNG THỂ hoàn tác!')) {
+                    subjects = [];
+                    schedule = {};
+                    localStorage.removeItem(STORAGE_KEYS.SUBJECTS);
+                    localStorage.removeItem(STORAGE_KEYS.SCHEDULE);
+                    renderSubjectsList();
+                    renderScheduleGrid();
+                    renderTodayView();
+                    alert('✅ Đã xóa tất cả dữ liệu!');
+                }
+            }
+        }
+
+        function saveSubjects() {
+            localStorage.setItem(STORAGE_KEYS.SUBJECTS, JSON.stringify(subjects));
+        }
+
+        function saveScheduleData() {
+            localStorage.setItem(STORAGE_KEYS.SCHEDULE, JSON.stringify(schedule));
+        }
+
+        // Initialize on load
+        window.addEventListener('DOMContentLoaded', init);
+    </script>
