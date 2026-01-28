@@ -13,25 +13,34 @@
 
         :root {
             --bg-primary: #ffffff;
-            --bg-secondary: #f5f7fa;
+            --bg-secondary: #f8fafc;
+            --bg-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
             --text-primary: #1a202c;
-            --text-secondary: #718096;
+            --text-secondary: #64748b;
             --border-color: #e2e8f0;
-            --shadow: 0 2px 8px rgba(0,0,0,0.1);
-            --shadow-hover: 0 4px 12px rgba(0,0,0,0.15);
-            --accent: #4299e1;
-            --danger: #f56565;
-            --success: #48bb78;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.1), 0 10px 10px -5px rgba(0,0,0,0.04);
+            --accent: #6366f1;
+            --accent-light: #818cf8;
+            --danger: #ef4444;
+            --success: #10b981;
+            --glass-bg: rgba(255, 255, 255, 0.7);
+            --glass-border: rgba(255, 255, 255, 0.18);
         }
 
         [data-theme="dark"] {
-            --bg-primary: #1a202c;
-            --bg-secondary: #2d3748;
-            --text-primary: #f7fafc;
-            --text-secondary: #a0aec0;
-            --border-color: #4a5568;
-            --shadow: 0 2px 8px rgba(0,0,0,0.3);
-            --shadow-hover: 0 4px 12px rgba(0,0,0,0.4);
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-gradient: linear-gradient(135deg, #4338ca 0%, #7c3aed 100%);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --border-color: #334155;
+            --shadow: 0 4px 6px -1px rgba(0,0,0,0.3), 0 2px 4px -1px rgba(0,0,0,0.2);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -2px rgba(0,0,0,0.2);
+            --shadow-xl: 0 20px 25px -5px rgba(0,0,0,0.3), 0 10px 10px -5px rgba(0,0,0,0.2);
+            --glass-bg: rgba(30, 41, 59, 0.7);
+            --glass-border: rgba(148, 163, 184, 0.18);
         }
 
         body {
@@ -39,7 +48,15 @@
             background: var(--bg-secondary);
             color: var(--text-primary);
             line-height: 1.6;
-            transition: background 0.3s, color 0.3s;
+            transition: background 0.3s ease, color 0.3s ease;
+        }
+
+        /* Glassmorphism effect */
+        .glass {
+            background: var(--glass-bg);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid var(--glass-border);
         }
 
         .container {
@@ -55,6 +72,8 @@
             position: sticky;
             top: 0;
             z-index: 100;
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
         }
 
         .header-content {
@@ -65,9 +84,13 @@
         }
 
         .logo {
-            font-size: 20px;
-            font-weight: 700;
-            color: var(--accent);
+            font-size: 24px;
+            font-weight: 800;
+            background: var(--bg-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
         }
 
         .header-actions {
@@ -110,52 +133,96 @@
 
         /* Buttons */
         .btn {
-            padding: 10px 16px;
+            padding: 12px 20px;
             border: none;
-            border-radius: 8px;
+            border-radius: 12px;
             cursor: pointer;
             font-size: 14px;
-            font-weight: 500;
-            transition: all 0.3s;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            background: var(--accent);
+            color: white;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .btn:active {
+            transform: translateY(0);
+        }
+
+        .btn-icon {
+            padding: 10px;
+            border-radius: 12px;
+            background: var(--bg-secondary);
+            border: none;
+            color: var(--text-primary);
+            font-size: 18px;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        .btn-icon:hover {
+            transform: scale(1.1) rotate(5deg);
             background: var(--accent);
             color: white;
         }
 
-        .btn:hover {
-            transform: translateY(-1px);
-            box-shadow: var(--shadow-hover);
-        }
-
-        .btn-icon {
-            padding: 8px;
-            border-radius: 50%;
-            background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            font-size: 18px;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
         .btn-small {
-            padding: 6px 12px;
+            padding: 8px 16px;
             font-size: 13px;
         }
 
         /* Week Navigation */
         .week-nav {
             background: var(--bg-primary);
-            padding: 16px;
+            padding: 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            gap: 12px;
-            border-radius: 12px;
+            gap: 16px;
+            border-radius: 16px;
             margin: 16px 0;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-lg);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .week-nav::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--bg-gradient);
         }
 
         .week-info {
@@ -164,9 +231,13 @@
         }
 
         .week-title {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 18px;
+            font-weight: 700;
             margin-bottom: 4px;
+            background: var(--bg-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .week-date {
@@ -177,17 +248,31 @@
         /* Schedule Grid */
         .schedule-grid {
             background: var(--bg-primary);
-            border-radius: 12px;
+            border-radius: 16px;
             overflow-x: auto;
+            overflow-y: hidden;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 20px;
+            position: relative;
             -webkit-overflow-scrolling: touch;
-            box-shadow: var(--shadow);
-            margin-bottom: 80px;
+        }
+
+        .schedule-grid::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: var(--bg-gradient);
+            z-index: 1;
         }
 
         .grid-container {
             display: grid;
             grid-template-columns: 60px repeat(6, 1fr);
-            min-width: 600px;
+            min-width: 700px;
+            padding-bottom: 16px;
         }
 
         .grid-header {
@@ -195,89 +280,163 @@
             top: 0;
             background: var(--bg-secondary);
             z-index: 10;
-            font-weight: 600;
+            font-weight: 700;
             font-size: 14px;
-            padding: 12px 8px;
+            padding: 16px 8px;
             text-align: center;
             border-bottom: 2px solid var(--border-color);
+            transition: all 0.3s;
         }
 
         .grid-header.today {
-            color: var(--accent);
+            background: var(--bg-gradient);
+            color: white;
+            font-size: 15px;
         }
 
         .grid-time {
             background: var(--bg-secondary);
             padding: 12px 8px;
             text-align: center;
-            font-size: 13px;
-            font-weight: 600;
+            font-size: 12px;
+            font-weight: 700;
             border-right: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            line-height: 1.3;
+        }
+
+        .time-label {
+            display: block;
+            font-size: 11px;
+            opacity: 0.8;
+            margin-top: 2px;
         }
 
         .grid-cell {
-            padding: 4px;
+            padding: 6px;
             border-right: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
-            min-height: 80px;
+            min-height: 90px;
             position: relative;
+            transition: background 0.3s;
+        }
+
+        .grid-cell:hover {
+            background: var(--bg-secondary);
         }
 
         .subject-card {
             background: linear-gradient(135deg, var(--subject-color) 0%, var(--subject-color-light) 100%);
-            border-radius: 8px;
-            padding: 8px;
+            border-radius: 12px;
+            padding: 12px;
             height: 100%;
             cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%);
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .subject-card:hover::before {
+            opacity: 1;
         }
 
         .subject-card:hover {
-            transform: translateY(-2px);
-            box-shadow: var(--shadow-hover);
+            transform: translateY(-4px) scale(1.02);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .subject-card:active {
+            transform: translateY(-2px) scale(1.01);
         }
 
         .subject-name {
-            font-weight: 600;
-            font-size: 13px;
+            font-weight: 700;
+            font-size: 14px;
             margin-bottom: 4px;
             color: #fff;
+            position: relative;
+            z-index: 1;
         }
 
         .subject-info {
             font-size: 11px;
-            opacity: 0.9;
+            opacity: 0.95;
             color: #fff;
+            position: relative;
+            z-index: 1;
         }
 
         /* Today View */
         .today-container {
-            padding: 16px 0;
+            padding: 16px 0 120px 0;
         }
 
         .today-card {
             background: var(--bg-primary);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
-            box-shadow: var(--shadow);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .today-card::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--bg-gradient);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .today-card:hover::before {
+            transform: scaleY(1);
+        }
+
+        .today-card:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-xl);
         }
 
         .today-card.current {
-            border-left: 4px solid var(--accent);
+            background: linear-gradient(135deg, var(--accent) 0%, var(--accent-light) 100%);
+            color: white;
+        }
+
+        .today-card.current .today-time,
+        .today-card.current .today-details {
+            color: rgba(255, 255, 255, 0.9);
         }
 
         .today-time {
             font-size: 13px;
             color: var(--text-secondary);
             margin-bottom: 8px;
+            font-weight: 600;
         }
 
         .today-subject {
-            font-size: 18px;
-            font-weight: 600;
+            font-size: 20px;
+            font-weight: 700;
             margin-bottom: 8px;
         }
 
@@ -289,14 +448,25 @@
         }
 
         .countdown {
-            background: var(--accent);
+            background: linear-gradient(135deg, #10b981 0%, #34d399 100%);
             color: white;
-            padding: 4px 12px;
+            padding: 6px 16px;
             border-radius: 20px;
             font-size: 12px;
-            font-weight: 600;
+            font-weight: 700;
             display: inline-block;
-            margin-top: 8px;
+            margin-top: 12px;
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.4);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
         }
 
         /* Modal */
@@ -307,11 +477,23 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.5);
+            background: rgba(0,0,0,0.6);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
             z-index: 1000;
             align-items: center;
             justify-content: center;
             padding: 16px;
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
 
         .modal.active {
@@ -320,25 +502,53 @@
 
         .modal-content {
             background: var(--bg-primary);
-            border-radius: 16px;
-            padding: 24px;
+            border-radius: 24px;
+            padding: 32px;
             max-width: 500px;
             width: 100%;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            box-shadow: var(--shadow-xl);
+            animation: slideUp 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        @keyframes slideUp {
+            from {
+                transform: translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        .modal-content::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: var(--bg-gradient);
+            border-radius: 24px 24px 0 0;
         }
 
         .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 20px;
+            margin-bottom: 24px;
         }
 
         .modal-title {
-            font-size: 20px;
-            font-weight: 700;
+            font-size: 24px;
+            font-weight: 800;
+            background: var(--bg-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
         }
 
         .form-group {
@@ -354,17 +564,20 @@
 
         .form-input, .form-select {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
+            padding: 12px 16px;
+            border: 2px solid var(--border-color);
+            border-radius: 12px;
             font-size: 14px;
             background: var(--bg-secondary);
             color: var(--text-primary);
+            transition: all 0.3s;
         }
 
         .form-input:focus, .form-select:focus {
             outline: none;
             border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+            transform: translateY(-2px);
         }
 
         .color-picker {
@@ -377,14 +590,37 @@
         .color-option {
             width: 100%;
             aspect-ratio: 1;
-            border-radius: 8px;
+            border-radius: 12px;
             border: 3px solid transparent;
             cursor: pointer;
-            transition: all 0.3s;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .color-option::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(0);
+            color: white;
+            font-size: 20px;
+            font-weight: bold;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
         .color-option.selected {
             border-color: var(--text-primary);
+            transform: scale(1.15);
+            box-shadow: var(--shadow-lg);
+        }
+
+        .color-option.selected::after {
+            transform: translate(-50%, -50%) scale(1);
+        }
+
+        .color-option:hover {
             transform: scale(1.1);
         }
 
@@ -398,8 +634,11 @@
             border-top: 1px solid var(--border-color);
             display: flex;
             justify-content: space-around;
-            padding: 8px 0;
-            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            padding: 12px 0 max(12px, env(safe-area-inset-bottom));
+            box-shadow: 0 -4px 12px rgba(0,0,0,0.1);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 1000;
         }
 
         .bottom-nav-item {
@@ -407,20 +646,51 @@
             flex-direction: column;
             align-items: center;
             gap: 4px;
-            padding: 8px 16px;
+            padding: 8px 20px;
             background: none;
             border: none;
             color: var(--text-secondary);
             cursor: pointer;
             font-size: 12px;
+            font-weight: 600;
+            border-radius: 12px;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+
+        .bottom-nav-item::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: 32px;
+            height: 3px;
+            background: var(--bg-gradient);
+            border-radius: 0 0 3px 3px;
+            transition: transform 0.3s;
+        }
+
+        .bottom-nav-item.active::before {
+            transform: translateX(-50%) scaleX(1);
         }
 
         .bottom-nav-item.active {
             color: var(--accent);
         }
 
+        .bottom-nav-item:hover {
+            background: var(--bg-secondary);
+            transform: translateY(-2px);
+        }
+
         .bottom-nav-icon {
             font-size: 24px;
+            transition: transform 0.3s;
+        }
+
+        .bottom-nav-item.active .bottom-nav-icon {
+            transform: scale(1.2);
         }
 
         /* Hide/Show Views */
@@ -445,27 +715,128 @@
             opacity: 0.5;
         }
 
-        /* Subjects List */
-        .subjects-list {
-            padding: 16px 0;
+        /* Activities List */
+        .activities-list {
+            /* Removed padding - now using inline style */
+        }
+
+        .activity-item {
+            background: var(--bg-primary);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .activity-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .activity-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-xl);
+        }
+
+        .activity-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 12px;
+        }
+
+        .activity-name {
+            font-weight: 700;
+            font-size: 18px;
+            flex: 1;
+        }
+
+        .activity-time {
+            font-size: 14px;
+            color: var(--text-secondary);
+            font-weight: 600;
+            background: var(--bg-secondary);
+            padding: 4px 12px;
+            border-radius: 8px;
+        }
+
+        .activity-details {
+            font-size: 14px;
+            color: var(--text-secondary);
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .activity-badge {
+            background: linear-gradient(135deg, #f59e0b 0%, #f97316 100%);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 600;
         }
 
         .subject-item {
             background: var(--bg-primary);
-            border-radius: 12px;
-            padding: 16px;
-            margin-bottom: 12px;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 16px;
             display: flex;
             align-items: center;
             gap: 16px;
-            box-shadow: var(--shadow);
+            box-shadow: var(--shadow-lg);
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .subject-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--bg-gradient);
+            transform: scaleY(0);
+            transition: transform 0.3s;
+        }
+
+        .subject-item:hover::before {
+            transform: scaleY(1);
+        }
+
+        .subject-item:hover {
+            transform: translateX(4px);
+            box-shadow: var(--shadow-xl);
         }
 
         .subject-color-badge {
-            width: 48px;
-            height: 48px;
-            border-radius: 12px;
+            width: 56px;
+            height: 56px;
+            border-radius: 16px;
             flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: transform 0.3s;
+        }
+
+        .subject-item:hover .subject-color-badge {
+            transform: scale(1.1) rotate(5deg);
         }
 
         .subject-item-info {
@@ -473,23 +844,32 @@
         }
 
         .subject-item-name {
-            font-weight: 600;
-            font-size: 16px;
+            font-weight: 700;
+            font-size: 18px;
             margin-bottom: 4px;
         }
 
         .subject-item-details {
-            font-size: 13px;
+            font-size: 14px;
             color: var(--text-secondary);
         }
 
         @media (max-width: 768px) {
             .grid-container {
-                grid-template-columns: 50px repeat(6, minmax(80px, 1fr));
+                grid-template-columns: 50px repeat(6, minmax(90px, 1fr));
+                min-width: 650px;
             }
 
             .logo {
                 font-size: 18px;
+            }
+            
+            .week-nav {
+                padding: 16px;
+            }
+            
+            .week-title {
+                font-size: 16px;
             }
         }
     </style>
@@ -497,7 +877,7 @@
 <body>
     <header>
         <div class="header-content">
-            <div class="logo">📚 TKB</div>
+            <div class="logo">Thời khóa biểu</div>
             <div class="header-actions">
                 <button class="btn-icon" onclick="toggleTheme()" title="Chuyển theme">🌙</button>
                 <button class="btn-icon" onclick="showSettings()" title="Cài đặt">⚙️</button>
@@ -529,6 +909,9 @@
             <div class="schedule-grid">
                 <div class="grid-container" id="scheduleGrid"></div>
             </div>
+            
+            <!-- Spacer to prevent dock overlap -->
+            <div style="height: 100px;"></div>
         </div>
 
         <!-- Today View -->
@@ -543,15 +926,24 @@
                 <h2 style="font-size: 24px;">Môn học</h2>
                 <button class="btn" onclick="showAddSubject()">+ Thêm môn</button>
             </div>
-            <div id="subjectsList" class="subjects-list"></div>
+            <div id="subjectsList" class="subjects-list" style="padding-bottom: 120px;"></div>
+        </div>
+
+        <!-- Activities View -->
+        <div id="activitiesView" class="view">
+            <div style="padding: 16px 0; display: flex; justify-content: space-between; align-items: center;">
+                <h2 style="font-size: 24px;">Hoạt động khác</h2>
+                <button class="btn" onclick="showAddActivity()">+ Thêm hoạt động</button>
+            </div>
+            <div id="activitiesList" class="activities-list" style="padding-bottom: 120px;"></div>
         </div>
     </div>
 
     <!-- Bottom Navigation -->
     <div class="bottom-nav">
         <button class="bottom-nav-item active" onclick="switchView('week')">
-            <span class="bottom-nav-icon">📅</span>
-            <span>Tuần</span>
+            <span class="bottom-nav-icon">🏫</span>
+            <span>Trên trường</span>
         </button>
         <button class="bottom-nav-item" onclick="switchView('today')">
             <span class="bottom-nav-icon">📍</span>
@@ -560,6 +952,10 @@
         <button class="bottom-nav-item" onclick="switchView('subjects')">
             <span class="bottom-nav-icon">📚</span>
             <span>Môn học</span>
+        </button>
+        <button class="bottom-nav-item" onclick="switchView('activities')">
+            <span class="bottom-nav-icon">🎯</span>
+            <span>Hoạt động khác</span>
         </button>
     </div>
 
@@ -612,12 +1008,48 @@
                     <select class="form-select" id="schedulePeriod" required></select>
                 </div>
                 <div class="form-group">
+                    <label class="form-label">Thời gian bắt đầu</label>
+                    <input type="time" class="form-input" id="scheduleStartTime" required>
+                </div>
+                <div class="form-group">
                     <label class="form-label">Môn học</label>
                     <select class="form-select" id="scheduleSubject" required></select>
                 </div>
                 <div style="display: flex; gap: 12px; margin-top: 24px;">
                     <button type="submit" class="btn" style="flex: 1;">Lưu</button>
                     <button type="button" class="btn" style="background: var(--text-secondary); flex: 1;" onclick="closeScheduleModal()">Hủy</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Activity Modal -->
+    <div id="activityModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="activityModalTitle">Thêm hoạt động</h3>
+                <button class="btn-icon" onclick="closeActivityModal()">✕</button>
+            </div>
+            <form id="activityForm" onsubmit="saveActivity(event)">
+                <div class="form-group">
+                    <label class="form-label">Tên hoạt động</label>
+                    <input type="text" class="form-input" id="activityName" placeholder="VD: Học thêm Toán, Đi chơi..." required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ngày</label>
+                    <input type="date" class="form-input" id="activityDate" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Thời gian bắt đầu</label>
+                    <input type="time" class="form-input" id="activityTime" required>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Ghi chú (tuỳ chọn)</label>
+                    <input type="text" class="form-input" id="activityNote" placeholder="Địa điểm, người liên hệ...">
+                </div>
+                <div style="display: flex; gap: 12px; margin-top: 24px;">
+                    <button type="submit" class="btn" style="flex: 1;">Lưu</button>
+                    <button type="button" class="btn" style="background: var(--text-secondary); flex: 1;" onclick="closeActivityModal()">Hủy</button>
                 </div>
             </form>
         </div>
@@ -647,7 +1079,8 @@
         const STORAGE_KEYS = {
             SUBJECTS: STORAGE_PREFIX + 'subjects',
             SCHEDULE: STORAGE_PREFIX + 'schedule',
-            THEME: STORAGE_PREFIX + 'theme'
+            THEME: STORAGE_PREFIX + 'theme',
+            ACTIVITIES: STORAGE_PREFIX + 'activities'
         };
 
         let currentWeekOffset = 0;
@@ -656,6 +1089,8 @@
         let currentTheme = localStorage.getItem(STORAGE_KEYS.THEME) || 'light';
         let editingSubjectId = null;
         let currentSession = 'morning'; // 'morning' or 'afternoon'
+        let activities = JSON.parse(localStorage.getItem(STORAGE_KEYS.ACTIVITIES)) || [];
+        let editingActivityId = null;
 
         // Initialize
         function init() {
@@ -732,7 +1167,27 @@
             const sessionLabel = currentSession === 'morning' ? 'Sáng' : 'Chiều';
 
             for (let period = 1; period <= periods; period++) {
-                html += `<div class="grid-time">${sessionLabel} ${period}</div>`;
+                // Get time from first schedule item in this period, or use default
+                let timeStr = '';
+                let foundTime = false;
+                
+                for (let day = 0; day < 6; day++) {
+                    const key = `${day}-${currentSession}-${period}`;
+                    if (schedule[key] && schedule[key].startTime) {
+                        timeStr = schedule[key].startTime;
+                        foundTime = true;
+                        break;
+                    }
+                }
+                
+                if (!foundTime) {
+                    const startHour = currentSession === 'morning' ? 7 : 13;
+                    const startTime = startHour * 60 + (period - 1) * 45;
+                    timeStr = `${Math.floor(startTime / 60)}:${(startTime % 60).toString().padStart(2, '0')}`;
+                }
+                
+                html += `<div class="grid-time">${sessionLabel} ${period}<span class="time-label">${timeStr}</span></div>`;
+                
                 for (let day = 0; day < 6; day++) {
                     const key = `${day}-${currentSession}-${period}`;
                     const scheduleItem = schedule[key];
@@ -777,37 +1232,71 @@
                 return;
             }
             
-            let todaySchedule = [];
+            let todayItems = [];
             
-            // Morning periods
+            // Get school schedule
             for (let period = 1; period <= PERIODS_MORNING; period++) {
                 const key = `${dayIndex}-morning-${period}`;
                 const item = schedule[key];
                 if (item) {
                     const subject = subjects.find(s => s.id == item.subjectId);
                     if (subject) {
-                        todaySchedule.push({ session: 'Sáng', period, subject });
+                        const [hours, minutes] = (item.startTime || '07:00').split(':');
+                        const time = parseInt(hours) * 60 + parseInt(minutes);
+                        todayItems.push({ 
+                            type: 'class',
+                            session: 'Sáng', 
+                            period, 
+                            subject,
+                            time,
+                            timeStr: item.startTime || '07:00'
+                        });
                     }
                 }
             }
             
-            // Afternoon periods
             for (let period = 1; period <= PERIODS_AFTERNOON; period++) {
                 const key = `${dayIndex}-afternoon-${period}`;
                 const item = schedule[key];
                 if (item) {
                     const subject = subjects.find(s => s.id == item.subjectId);
                     if (subject) {
-                        todaySchedule.push({ session: 'Chiều', period, subject });
+                        const [hours, minutes] = (item.startTime || '13:00').split(':');
+                        const time = parseInt(hours) * 60 + parseInt(minutes);
+                        todayItems.push({ 
+                            type: 'class',
+                            session: 'Chiều', 
+                            period, 
+                            subject,
+                            time,
+                            timeStr: item.startTime || '13:00'
+                        });
                     }
                 }
             }
 
-            if (todaySchedule.length === 0) {
+            // Get activities for today
+            const todayStr = today.toISOString().split('T')[0];
+            const todayActivities = activities.filter(a => a.date === todayStr);
+            todayActivities.forEach(activity => {
+                const [hours, minutes] = activity.time.split(':');
+                const time = parseInt(hours) * 60 + parseInt(minutes);
+                todayItems.push({
+                    type: 'activity',
+                    activity,
+                    time,
+                    timeStr: activity.time
+                });
+            });
+
+            // Sort by time
+            todayItems.sort((a, b) => a.time - b.time);
+
+            if (todayItems.length === 0) {
                 container.innerHTML = `
                     <div class="empty-state">
                         <div class="empty-icon">📅</div>
-                        <p>Không có tiết học nào hôm nay</p>
+                        <p>Không có gì trong lịch hôm nay</p>
                     </div>
                 `;
                 return;
@@ -818,31 +1307,34 @@
             const currentTime = currentHour * 60 + currentMinute;
 
             let html = '';
-            todaySchedule.forEach(({ session, period, subject }) => {
-                // Calculate time based on session
-                let startTime;
-                if (session === 'Sáng') {
-                    startTime = 7 * 60 + (period - 1) * 45;
-                } else {
-                    startTime = 13 * 60 + (period - 1) * 45;
-                }
+            todayItems.forEach(item => {
+                const isCurrent = currentTime >= item.time && currentTime < item.time + 45;
+                const isUpcoming = currentTime < item.time;
                 
-                const isCurrent = currentTime >= startTime && currentTime < startTime + 45;
-                const isUpcoming = currentTime < startTime;
-                
-                let timeStr = `${Math.floor(startTime / 60)}:${(startTime % 60).toString().padStart(2, '0')}`;
-                
-                html += `
-                    <div class="today-card ${isCurrent ? 'current' : ''}">
-                        <div class="today-time">${session} - Tiết ${period} • ${timeStr}</div>
-                        <div class="today-subject">${subject.name}</div>
-                        <div class="today-details">
-                            ${subject.teacher ? `<span>👤 ${subject.teacher}</span>` : ''}
+                if (item.type === 'class') {
+                    html += `
+                        <div class="today-card ${isCurrent ? 'current' : ''}">
+                            <div class="today-time">${item.session} - Tiết ${item.period} • ${item.timeStr}</div>
+                            <div class="today-subject">${item.subject.name}</div>
+                            <div class="today-details">
+                                ${item.subject.teacher ? `<span>👤 ${item.subject.teacher}</span>` : ''}
+                            </div>
+                            ${isCurrent ? '<span class="countdown">Đang học</span>' : ''}
+                            ${isUpcoming && currentTime > item.time - 15 ? '<span class="countdown">Sắp tới</span>' : ''}
                         </div>
-                        ${isCurrent ? '<span class="countdown">Đang học</span>' : ''}
-                        ${isUpcoming && currentTime > startTime - 15 ? '<span class="countdown">Sắp tới</span>' : ''}
-                    </div>
-                `;
+                    `;
+                } else {
+                    html += `
+                        <div class="today-card" style="border-left: 4px solid #f59e0b;">
+                            <div class="today-time">Hoạt động • ${item.timeStr}</div>
+                            <div class="today-subject">${item.activity.name}</div>
+                            <div class="today-details">
+                                ${item.activity.note ? `<span>📝 ${item.activity.note}</span>` : ''}
+                            </div>
+                            <span class="activity-badge">Hoạt động khác</span>
+                        </div>
+                    `;
+                }
             });
 
             container.innerHTML = html;
@@ -968,6 +1460,13 @@
             document.getElementById('scheduleSession').value = session;
             document.getElementById('schedulePeriod').value = period;
             document.getElementById('scheduleSubject').value = '';
+            
+            // Set default start time based on session and period
+            const startHour = session === 'morning' ? 7 : 13;
+            const startTime = startHour * 60 + (period - 1) * 45;
+            const timeStr = `${Math.floor(startTime / 60).toString().padStart(2, '0')}:${(startTime % 60).toString().padStart(2, '0')}`;
+            document.getElementById('scheduleStartTime').value = timeStr;
+            
             document.getElementById('scheduleModal').classList.add('active');
         }
 
@@ -985,6 +1484,7 @@
             document.getElementById('scheduleSession').value = session;
             document.getElementById('schedulePeriod').value = period;
             document.getElementById('scheduleSubject').value = item.subjectId;
+            document.getElementById('scheduleStartTime').value = item.startTime || '07:00';
             document.getElementById('scheduleModal').classList.add('active');
         }
 
@@ -995,8 +1495,9 @@
             const session = document.getElementById('scheduleSession').value;
             const period = document.getElementById('schedulePeriod').value;
             const subjectId = document.getElementById('scheduleSubject').value;
+            const startTime = document.getElementById('scheduleStartTime').value;
             
-            console.log('Saving schedule:', { day, session, period, subjectId });
+            console.log('Saving schedule:', { day, session, period, subjectId, startTime });
             
             if (!subjectId) {
                 alert('Vui lòng chọn môn học!');
@@ -1009,7 +1510,7 @@
                 delete schedule[key];
                 console.log('Removed schedule at', key);
             } else {
-                schedule[key] = { subjectId: subjectId };
+                schedule[key] = { subjectId: subjectId, startTime: startTime };
                 console.log('Added schedule at', key, ':', schedule[key]);
             }
             
@@ -1103,6 +1604,10 @@
             } else if (view === 'subjects') {
                 document.getElementById('subjectsView').classList.add('active');
                 document.querySelectorAll('.bottom-nav-item')[2].classList.add('active');
+            } else if (view === 'activities') {
+                document.getElementById('activitiesView').classList.add('active');
+                document.querySelectorAll('.bottom-nav-item')[3].classList.add('active');
+                renderActivitiesList();
             }
         }
 
@@ -1156,6 +1661,7 @@
                 const data = {
                     subjects: subjects,
                     schedule: schedule,
+                    activities: activities,
                     exportDate: new Date().toISOString()
                 };
                 const json = JSON.stringify(data, null, 2);
@@ -1183,11 +1689,14 @@
                             if (data.subjects && data.schedule) {
                                 subjects = data.subjects;
                                 schedule = data.schedule;
+                                activities = data.activities || [];
                                 saveSubjects();
                                 saveScheduleData();
+                                saveActivities();
                                 renderSubjectsList();
                                 renderScheduleGrid();
                                 renderTodayView();
+                                renderActivitiesList();
                                 alert('✅ Khôi phục dữ liệu thành công!');
                             } else {
                                 alert('❌ File không hợp lệ!');
@@ -1200,14 +1709,17 @@
                 };
                 input.click();
             } else if (choice === '3') {
-                if (confirm('⚠️ Xóa tất cả môn học và lịch học?\n\nHành động này KHÔNG THỂ hoàn tác!')) {
+                if (confirm('⚠️ Xóa tất cả môn học, lịch học và hoạt động?\n\nHành động này KHÔNG THỂ hoàn tác!')) {
                     subjects = [];
                     schedule = {};
+                    activities = [];
                     localStorage.removeItem(STORAGE_KEYS.SUBJECTS);
                     localStorage.removeItem(STORAGE_KEYS.SCHEDULE);
+                    localStorage.removeItem(STORAGE_KEYS.ACTIVITIES);
                     renderSubjectsList();
                     renderScheduleGrid();
                     renderTodayView();
+                    renderActivitiesList();
                     alert('✅ Đã xóa tất cả dữ liệu!');
                 }
             }
@@ -1219,6 +1731,130 @@
 
         function saveScheduleData() {
             localStorage.setItem(STORAGE_KEYS.SCHEDULE, JSON.stringify(schedule));
+        }
+
+        function saveActivities() {
+            localStorage.setItem(STORAGE_KEYS.ACTIVITIES, JSON.stringify(activities));
+        }
+
+        // Activities functions
+        function renderActivitiesList() {
+            const list = document.getElementById('activitiesList');
+            
+            if (activities.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">🎯</div>
+                        <p>Chưa có hoạt động nào</p>
+                        <button class="btn" onclick="showAddActivity()" style="margin-top: 16px;">Thêm hoạt động đầu tiên</button>
+                    </div>
+                `;
+                return;
+            }
+
+            // Sort by date and time
+            const sorted = [...activities].sort((a, b) => {
+                if (a.date !== b.date) return a.date.localeCompare(b.date);
+                return a.time.localeCompare(b.time);
+            });
+
+            list.innerHTML = sorted.map(a => {
+                const date = new Date(a.date);
+                const dateStr = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`;
+                
+                return `
+                    <div class="activity-item">
+                        <div class="activity-header">
+                            <div class="activity-name">${a.name}</div>
+                            <div class="activity-time">${a.time}</div>
+                        </div>
+                        <div class="activity-details">
+                            <span>📅 ${dateStr}</span>
+                            ${a.note ? `<span>📝 ${a.note}</span>` : ''}
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 12px;">
+                            <button class="btn-icon" onclick="editActivity('${a.id}')">✏️</button>
+                            <button class="btn-icon" onclick="deleteActivity('${a.id}')">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function showAddActivity() {
+            editingActivityId = null;
+            document.getElementById('activityModalTitle').textContent = 'Thêm hoạt động';
+            document.getElementById('activityForm').reset();
+            
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('activityDate').value = today;
+            
+            document.getElementById('activityModal').classList.add('active');
+        }
+
+        function editActivity(id) {
+            const activity = activities.find(a => a.id == id);
+            if (!activity) return;
+            
+            editingActivityId = id;
+            document.getElementById('activityModalTitle').textContent = 'Sửa hoạt động';
+            document.getElementById('activityName').value = activity.name;
+            document.getElementById('activityDate').value = activity.date;
+            document.getElementById('activityTime').value = activity.time;
+            document.getElementById('activityNote').value = activity.note || '';
+            
+            document.getElementById('activityModal').classList.add('active');
+        }
+
+        function deleteActivity(id) {
+            if (!confirm('Xóa hoạt động này?')) return;
+            
+            activities = activities.filter(a => a.id != id);
+            saveActivities();
+            renderActivitiesList();
+            renderTodayView();
+        }
+
+        function saveActivity(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('activityName').value.trim();
+            const date = document.getElementById('activityDate').value;
+            const time = document.getElementById('activityTime').value;
+            const note = document.getElementById('activityNote').value.trim();
+            
+            if (!name || !date || !time) {
+                alert('Vui lòng điền đầy đủ thông tin!');
+                return;
+            }
+            
+            if (editingActivityId) {
+                const activity = activities.find(a => a.id == editingActivityId);
+                if (activity) {
+                    activity.name = name;
+                    activity.date = date;
+                    activity.time = time;
+                    activity.note = note;
+                }
+            } else {
+                activities.push({
+                    id: 'act_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9),
+                    name,
+                    date,
+                    time,
+                    note
+                });
+            }
+            
+            saveActivities();
+            renderActivitiesList();
+            renderTodayView();
+            closeActivityModal();
+        }
+
+        function closeActivityModal() {
+            document.getElementById('activityModal').classList.remove('active');
         }
 
         // Initialize on load
